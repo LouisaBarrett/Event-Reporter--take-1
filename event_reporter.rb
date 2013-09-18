@@ -1,67 +1,115 @@
-require 'csv'
-
+require './lib/attendee.rb'
+  require './lib/phone_number.rb'
+  require 'csv'
+ 
 class EventReporter
-
+    
   def initialize
     @queue = []
-    @commands = { 'queue clear' => "clears out queue", 
-      'queue count' => "counts your queue",
-      'queue print' => "prints the queue" }
+    @contents = ""
   end
-
+ 
   def run
-   #pull from mircoblogger
-    puts "Welcome to Event Reporter"
+    puts "Welcome!"
+ 
     command = ""
-      while command != "quit"
-       printf "enter command: "
-        input = gets.chomp
-        command = input
-
+ 
+    while command != "quit"
+      printf "enter command: "
+      input = gets.chomp
+      command = input
+ 
       case command
-        when "quit" then 
-          puts "Goodbye"
-        when "queue count" then 
-          puts "#{queue_count}"
-        when "queue clear" then 
+        when "quit" 
+          puts "goodbye"
+        when "queue count"
+          puts "There are #{queue_count} items in the queue" 
+        when "queue clear"
           queue_clear
-          puts "Queue Cleared"
-        when 'help'
-          puts @commands.keys
-        when "help queue count"
-          puts "queue count : #{@commands["queue count"]}"
-        when "help queue print"
-          puts "queue print : #{@commands["queue print"]}"
-      end
+          puts "There are #{queue_count} items in the queue"
+        when "help"
+          commands_help
+        when "queue print"
+          queue_print
+        when "find"
+          find("last_name","Arnold")
+        end
+ 
+      end 
     end
   end
-
-  # def execute_command
-  # end
-
+ 
+  # find("last_name","Arnold")
+  def find(field,criteria)
+    @contents = CSV.read "event_attendees.csv", headers: true, header_converters: :symbol 
+        
+    @contents.each do |row|
+      column_data = row[field.to_sym]
+      if column_data == criteria
+        @queue.push(row)
+      end    
+      # add it to the queue
+      
+    end
+  end
+ 
+ 
   def load_file
-    @contents = CSV.read 'event_attendees.csv', headers: true, header_converters: :symbol
+    @contents 
   end
-
-  def commands
-    @commands
-  end
-
-
+ 
   def queue_count
     @queue.length
   end
-
-  def find(criteria)
-    #"attribute" => "criteria"
-  end
-
+ 
   def queue_clear
     @queue.clear
   end
-
-
-end
-
-er = EventReporter.new
-er.run
+ 
+  def queue_print
+    puts @queue
+  end
+ 
+  def clean_phone(phone)
+ 
+  end
+ 
+  def first_name
+  
+  end
+ 
+  def help_command(command)
+ 
+ 
+  end
+ 
+ 
+  def commands_help
+    @commands = {"queue clear" => "clears your queue",
+                 "queue count" => "tells you current queue count",
+                  "queue print" => "prints your queue",
+                  "queue print by 'attribute'" => "prints data table by specific attribute",
+                  "load <filename>" => "loads file (deault is event_attendees.csv",
+                  "queue save to <filename.csv>" => "saves queue to specified CSV file",
+                  "find 'attribute' and 'criteria'" => "finds all records matching criteria",
+                  "help <command>" => "outputs description of how to use specific comman"}
+      puts @commands.keys          
+  end
+ 
+  @contents = CSV.read "event_attendees.csv", headers: true, header_converters: :symbol 
+ 
+ 
+  # @contents.each do |row|
+ 
+  # id = row[0]
+ 
+  # name = row[:first_name]
+ 
+  #   phone = clean_phone(row[:homephone])
+    
+  #   zipcode = clean_zipcode(row[:zipcode])
+ 
+  # end
+ 
+  er = EventReporter.new
+  er.run
