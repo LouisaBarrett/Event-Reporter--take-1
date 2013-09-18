@@ -1,5 +1,5 @@
-require './lib/attendee.rb'
-  require './lib/phone_number.rb'
+#require './lib/attendee.rb'
+ # require './lib/phone_number.rb'
   require 'csv'
  
 class EventReporter
@@ -18,7 +18,18 @@ class EventReporter
       printf "enter command: "
       input = gets.chomp
       command = input
- 
+      parts = input.split(" ")
+  
+      # command => "find first_name Allison"
+      # parts => 
+      puts "Parts: #{parts}" # 
+      puts "Command: #{command}"
+
+      if parts[0] == "find"
+        # puts "HOLLY GEEZ I'm FINDING #{parts}"
+        find(parts[1], parts[2]) 
+      end
+
       case command
         when "quit" 
           puts "goodbye"
@@ -31,11 +42,10 @@ class EventReporter
           commands_help
         when "queue print"
           queue_print
-        when "find"
-          find("last_name","Arnold")
         end
- 
-      end 
+      end
+
+
     end
   end
  
@@ -74,14 +84,14 @@ class EventReporter
  
   end
  
-  def first_name
-  
-  end
+  # def first_name("#{first_name}")
+  # end
+
+  # def last_name("#{last_name}")
+  # end
  
-  def help_command(command)
- 
- 
-  end
+  # def help_command(command)
+  # end
  
  
   def commands_help
@@ -93,10 +103,12 @@ class EventReporter
                   "queue save to <filename.csv>" => "saves queue to specified CSV file",
                   "find 'attribute' and 'criteria'" => "finds all records matching criteria",
                   "help <command>" => "outputs description of how to use specific comman"}
-      puts @commands.keys          
+    @commands.each do |key, val|
+      puts "enter: \"#{key.upcase}\", #{val}"
+    end         
   end
  
-  @contents = CSV.read "event_attendees.csv", headers: true, header_converters: :symbol 
+  # @contents = CSV.read "event_attendees.csv", headers: true, header_converters: :symbol 
  
  
   # @contents.each do |row|
