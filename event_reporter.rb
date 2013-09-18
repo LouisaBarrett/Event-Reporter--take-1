@@ -4,9 +4,11 @@
  
 class EventReporter
     
+  #attr_accessor :contents
   def initialize
     @queue = []
     @contents = ""
+    @x = 0
   end
  
   def run
@@ -15,19 +17,24 @@ class EventReporter
     command = ""
  
     while command != "quit"
-      printf "enter command: "
+      if @x != 1
+      printf "Type \"load\" to specify your document: "
+      else 
+        printf "enter command: "
+      end
       input = gets.chomp
       command = input
       parts = input.split(" ")
-  
-      # command => "find first_name Allison"
-      # parts => 
+
       puts "Parts: #{parts}" # 
       puts "Command: #{command}"
 
       if parts[0] == "find"
-        # puts "HOLLY GEEZ I'm FINDING #{parts}"
         find(parts[1], parts[2]) 
+      end
+
+      if parts[0] == "load"
+        load_file(parts[1])
       end
 
       case command
@@ -42,6 +49,8 @@ class EventReporter
           commands_help
         when "queue print"
           queue_print
+        # when "load"
+        #   load_file(parts[1])
         end
       end
 
@@ -49,23 +58,23 @@ class EventReporter
     end
   end
  
-  # find("last_name","Arnold")
   def find(field,criteria)
-    @contents = CSV.read "event_attendees.csv", headers: true, header_converters: :symbol 
+    #@contents = CSV.read "event_attendees.csv", headers: true, header_converters: :symbol 
         
     @contents.each do |row|
       column_data = row[field.to_sym]
       if column_data == criteria
         @queue.push(row)
       end    
-      # add it to the queue
       
     end
   end
  
  
-  def load_file
-    @contents 
+  def load_file(filename)
+    @contents = CSV.read "#{filename}", headers: true, header_converters: :symbol 
+    @x = 1
+    # "event_attendees.csv"
   end
  
   def queue_count
@@ -77,22 +86,13 @@ class EventReporter
   end
  
   def queue_print
+    
     puts @queue
   end
  
   def clean_phone(phone)
  
-  end
- 
-  # def first_name("#{first_name}")
-  # end
-
-  # def last_name("#{last_name}")
-  # end
- 
-  # def help_command(command)
-  # end
- 
+  end 
  
   def commands_help
     @commands = {"queue clear" => "clears your queue",
