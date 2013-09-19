@@ -26,8 +26,8 @@ class EventReporter
       command = input
       parts = input.split(" ")
 
-      puts "Parts: #{parts}" # 
-      puts "Command: #{command}"
+      # puts "Parts: #{parts}" 
+      # puts "Command: #{command}"
 
       if parts[0] == "find"
         find(parts[1], parts[2]) 
@@ -35,6 +35,10 @@ class EventReporter
 
       if parts[0] == "load"
         load_file(parts[1])
+      end
+
+      if parts[0] == "save"
+        save_csv_file(parts[1])
       end
 
       case command
@@ -49,8 +53,6 @@ class EventReporter
           commands_help
         when "queue print"
           queue_print
-        # when "load"
-        #   load_file(parts[1])
         end
       end
 
@@ -74,7 +76,16 @@ class EventReporter
   def load_file(filename)
     @contents = CSV.read "#{filename}", headers: true, header_converters: :symbol 
     @x = 1
-    # "event_attendees.csv"
+  end
+  
+  def save_csv_file(name)
+    Dir.mkdir("attendees") unless Dir.exists?("attendees")
+
+    filename = "attendees/#{name}.csv"
+
+    File.open(filename, 'w') do |file|
+      file.puts @queue
+    end
   end
  
   def queue_count
@@ -86,7 +97,6 @@ class EventReporter
   end
  
   def queue_print
-    
     puts @queue
   end
  
