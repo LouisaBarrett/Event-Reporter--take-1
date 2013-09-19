@@ -68,7 +68,6 @@ class EventReporter
       if column_data == criteria
         @queue.push(row)
       end    
-      
     end
   end
  
@@ -97,11 +96,14 @@ class EventReporter
   end
  
   def queue_print
-    puts @queue
+    @queue.to_s.upcase
+      puts "LAST_NAME".ljust(15)+"FIRST_NAME".ljust(15)+"EMAIL".ljust(50)+"ZIPCODE".ljust(15)+"CITY".ljust(30)+"STATE".ljust(15)+"ADDRESS".ljust(50)+"PHONE".ljust(15)
+      @queue.each do |row|
+      puts row[:last_name].ljust(15)+row[:first_name].ljust(15)+row[:email_address].ljust(50)+row[:zipcode].ljust(15)+row[:city].ljust(30)+row[:state].ljust(15)+row[:street].ljust(15)+"#{@phonenumber}"
+    end
   end
  
   def clean_phone(phone)
- 
   end 
  
   def commands_help
@@ -110,28 +112,19 @@ class EventReporter
                   "queue print" => "prints your queue",
                   "queue print by 'attribute'" => "prints data table by specific attribute",
                   "load <filename>" => "loads file (deault is event_attendees.csv",
-                  "queue save to <filename.csv>" => "saves queue to specified CSV file",
+                  "save to <filename.csv>" => "saves queue to specified CSV file",
                   "find 'attribute' and 'criteria'" => "finds all records matching criteria",
-                  "help <command>" => "outputs description of how to use specific comman"}
+                  "help" => "outputs description of all command functions"}
     @commands.each do |key, val|
       puts "enter: \"#{key.upcase}\", #{val}"
     end         
   end
  
-  # @contents = CSV.read "event_attendees.csv", headers: true, header_converters: :symbol 
- 
- 
-  # @contents.each do |row|
- 
-  # id = row[0]
- 
-  # name = row[:first_name]
  
   #   phone = clean_phone(row[:homephone])
     
   #   zipcode = clean_zipcode(row[:zipcode])
  
-  # end
  
   er = EventReporter.new
   er.run
